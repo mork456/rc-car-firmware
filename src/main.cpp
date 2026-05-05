@@ -2,12 +2,7 @@
 #include<Servo.h>
 #include<SoftwareSerial.h>
 
-void moveForward();
-void moveBackward();
-void turnLeft();
-void turnRight();
 void stopRobot();
-void executeCommand(char c);
 
 // Arduino pin 3 (ReceivePin) connects to HM-10 TXD
 // Arduino pin 4 (TransmitPin) connects to HM-10 RXD (via voltage divider)
@@ -17,7 +12,7 @@ Servo leftServo;
 Servo rightServo;
 
 void setup () {
-    //Start serial for HM-10
+    //Start serial for HM-10 with baud rate 9600
     BLE.begin(9600);
     
     leftServo.attach(7);
@@ -32,30 +27,21 @@ unsigned long lastCommandTime = 0;
 void loop() {
     // This loop runs while the HM-10 BLE device is connected (via virtual serial port)
     if (BLE.available()) {
-        char cmd = BLE.read();
-        executeCommand(cmd);
-        lastCommandTime = millis(); // Record the time of the last command
-    }
+        String data = BLE.readStringUntil('\n');
+        int commaIndex = data.indexOf(','); // Record commaIndex, if not found returns -1
+        if (commaIndex != -1) { // Runs only if the data is correctly formatted
+            int leftSpeed = data.substring(0, commaIndex).toInt(); // Read the first part of string and convert to integer to save in leftSpeed
+            int rightSpeed = data.substring(commaIndex + 1).toInt(); // Read the last part of string starting from commaIndex + 1 and convert to integer to save in rightSpeed
+            leftServo.write(leftSpeed);
+            rightServo.write(rightSpeed);
+            lastCommandTime = millis();
+        }
+
+   }
     // After 200ms of no received command, stop
     if (millis() - lastCommandTime > 200) {
         stopRobot();
     }
 }
 
-// Map received keyboard input to appropriate motion functions
-void executeCommand(char c) {
-    switch (c) {
-        case 'w' : moveForward(); break;
-        case 's' : moveBackward(); break;
-        case 'a' : turnLeft(); break;
-        case 'd' : turnRight(); break;
-        case ' ' : stopRobot(); break; 
-    }
-} 
-
-// Motion functions
-void moveForward()  { leftServo.write(180); rightServo.write(0);   }
-void moveBackward() { leftServo.write(0);   rightServo.write(180); }
-void turnLeft()     { leftServo.write(0);   rightServo.write(0);   }
-void turnRight()    { leftServo.write(180); rightServo.write(180); }
 void stopRobot()    { leftServo.write(90);  rightServo.write(90);  }
