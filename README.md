@@ -27,6 +27,8 @@ $R_1$ = 1k resistor into TXD, $R_2$ =  2.2k resistor from TXD to GND
 
 $V_{out} = V_{in} \cdot \frac{R_2}{R_1 + R_2} = 5V \cdot \frac{2.2k\Omega}{1k\Omega + 2.2k\Omega} \approx 3.4V$
 
+~3.4V is safe compared to the full 5V from the arduino, which would damage the HM-10 module.
+
 ## Protocol
 
 The program reads the string received from serial BLE connection, expecting data in bytes in the format "{left_speed},{right_speed}\n". It then writes the received speed to each servo.
