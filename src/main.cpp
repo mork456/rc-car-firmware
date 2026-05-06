@@ -14,8 +14,6 @@ Servo rightServo;
 void setup () {
     // Start serial for HM-10 with baud rate 9600
     BLE.begin(9600);
-    // Serial for debugging arduino    
-    Serial.begin(9600);
 
     leftServo.attach(7);
     rightServo.attach(9);
@@ -37,7 +35,6 @@ void loop() {
             leftServo.write(leftSpeed);
             rightServo.write(rightSpeed);
             lastCommandTime = millis();
-            Serial.println(data);
         }
 
    }
