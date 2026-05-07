@@ -9,10 +9,6 @@ Arduino firmware for a BLE-controlled 2 servo/wheel robot. Receives servo speeds
 - Continuous rotation servos
 - Breadboard, wires, 1k and 2.k resistors
 
-## Requirements
-- Computer with python installed
-- Xbox controller
-
 ## Wiring
 
 | Component | Pin |
@@ -39,7 +35,7 @@ If no command is received for more than 200ms, it stops the robot.
 One may use Arduino IDE, given that the nanoatmega328 with new bootloader is selected
 
 Create a Python venv and install PlatformIO:
-```powershell
+```powershell/bash
 python -m venv venv
 .\venv\Scripts\activate # Windows
 source venv/bin/activate # Unix
@@ -47,12 +43,12 @@ pip install platformio
 ```
 
 Then connect the arduino with the USB cable and flash:
-```powershell
+```powershell/bash
 pio run -t upload
 ```
 
 other useful PlatformIO commands and config file:
-```powershell
+```powershell/bash
 pio run # Compile without flashing
 pio run -t compiledb # Fixes language server errors
 ```
